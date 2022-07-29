@@ -1,5 +1,5 @@
 # Build Stage:
-FROM golang:1.18
+FROM golang:1.18 as builder
 
 ## Install build dependencies.
 RUN apt-get update && \
@@ -12,3 +12,7 @@ WORKDIR /gomodifytags
 ## Build Step
 RUN go mod tidy
 RUN go build
+
+# Package Stage
+FROM debian:bookworm-slim
+COPY --from=builder /gomodifytags/gomodifytags /
